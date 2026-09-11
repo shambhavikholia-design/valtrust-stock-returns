@@ -40,7 +40,9 @@ function parseStockResponse(raw, requestedTicker) {
   const latestPrice = Number.isFinite(nsePrice) ? nsePrice : bsePrice;
 
   if (!Number.isFinite(latestPrice)) {
-    throw new UpstreamUnavailableError('IndianAPI did not return a usable current price');
+    // A 200 OK with no usable price almost always means the ticker/company
+    // name wasn't recognized, not that the provider itself is down.
+    throw new StockNotFoundError(requestedTicker);
   }
 
   return {
@@ -102,7 +104,7 @@ export async function getStockReturns(tickerInput) {
     // These two could be parallelized, but the shared 1 req/sec throttle in the
     // IndianAPI client already serializes them safely either way.
     stockRaw = await fetchStockData(ticker);
-    historicalRaw = await fetchHistoricalData(ticker, '5yr');
+    historicalRaw = await fetchHistoricalData(ticker, '10yr');
   } catch (err) {
     if (err instanceof IndianApiError) {
       if (err.code === 'NOT_FOUND') {

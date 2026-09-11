@@ -99,9 +99,12 @@ async function requestWithRetry(path, params, attempt = 0) {
     });
   }
 
-  if (response.status === 404) {
-    throw new IndianApiError('IndianAPI returned 404 for this request', {
-      status: 404,
+  if (response.status >= 400 && response.status < 500) {
+    // Any remaining 4xx here (400, 404, 422, etc.) on a request we've already
+    // format-validated almost always means IndianAPI didn't recognize the
+    // ticker/company name - classify as "not found," not a generic failure.
+    throw new IndianApiError(`IndianAPI returned ${response.status} for this ticker`, {
+      status: response.status,
       code: 'NOT_FOUND',
     });
   }
