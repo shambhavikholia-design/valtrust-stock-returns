@@ -109,7 +109,12 @@ cache -> respond`.
 - **No BSE data validated live** — only NSE tickers (RELIANCE) were tested
   against the real API before submission; other tickers and BSE-only stocks
   should be spot-checked before relying on this in production.
-
+- **Company-name search relies on IndianAPI's own fuzzy matching** — a
+  partial or ambiguous name (e.g. "deepa") may return an unrelated company
+  IndianAPI considers a close match, rather than "not found." The app always
+  displays the full matched company name prominently so this is immediately
+  visible; entering the exact ticker symbol is more reliable than a partial
+  company name.
 ## AI tools used
 
 - **Claude (Anthropic):** Planned the overall architecture and layered backend
