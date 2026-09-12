@@ -74,6 +74,14 @@ describe('GET /api/returns/:ticker - input validation', () => {
     assert.equal(typeof body.error.code, 'string');
     assert.equal(typeof body.error.message, 'string');
   });
+
+  test('accepts a numeric BSE code as valid ticker format (does not 400)', async () => {
+    const res = await fetch(`${baseUrl}/api/returns/500325`);
+    // We only assert it passes validation and doesn't immediately reject as
+    // malformed - it may still succeed (200) or hit IndianAPI directly, so we
+    // just confirm it's not rejected for its numeric shape (not a 400).
+    assert.notEqual(res.status, 400);
+    });
 });
 
 describe('Unknown routes', () => {

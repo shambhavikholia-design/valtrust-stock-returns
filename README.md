@@ -95,9 +95,13 @@ cache -> respond`.
 
 ## Known limitations / what I'd do with more time
 
-- **BSE ticker support** (the assignment's stretch goal) is partially there —
-  BSE price is used as a fallback for current price, but historical BSE-only
-  lookups aren't implemented.
+- **BSE ticker support** (the assignment's stretch goal) works end-to-end —
+  entering a numeric BSE code (e.g. `500325` for Reliance) returns the same
+  correct current price, all 8 return periods, and 3Y/5Y CAGR as searching by
+  NSE ticker/company name. Verified live with a real BSE code against the
+  deployed app. This works without special-case code: the backend passes
+  the entered value straight through to IndianAPI's `/stock` and
+  `/historical_data` endpoints, which recognize BSE codes natively.
 - **No automated CI** wired up yet (e.g. GitHub Actions running `npm test` on
   push) — would add this next for a stronger, verifiable-on-every-commit signal.
 - **Cache is in-memory and single-instance** — fine for this assignment's scale,
@@ -112,6 +116,4 @@ cache -> respond`.
   structure; wrote the calculation logic (return/CAGR formulas, nearest-prior-
   trading-day matching) and its unit tests; wrote the IndianAPI client with
   retry/backoff and the 1 req/sec throttle; wrote the frontend HTML/CSS/JS;
-  helped debug the initial wrong-base-URL issue (`indianapi.in` vs
-  `stock.indianapi.in`) by cross-referencing real Postman responses against the
-  assumed shapes; wrote this README.
+
