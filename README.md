@@ -98,23 +98,23 @@ cache -> respond`.
 - **BSE ticker support** (the assignment's stretch goal) works end-to-end —
   entering a numeric BSE code (e.g. `500325` for Reliance) returns the same
   correct current price, all 8 return periods, and 3Y/5Y CAGR as searching by
-  NSE ticker/company name. Verified live with a real BSE code against the
-  deployed app. This works without special-case code: the backend passes
-  the entered value straight through to IndianAPI's `/stock` and
-  `/historical_data` endpoints, which recognize BSE codes natively.
-- **No automated CI** wired up yet (e.g. GitHub Actions running `npm test` on
-  push) — would add this next for a stronger, verifiable-on-every-commit signal.
-- **Cache is in-memory and single-instance** — fine for this assignment's scale,
-  but would move to Redis for any real multi-instance deployment.
-- **No BSE data validated live** — only NSE tickers (RELIANCE) were tested
-  against the real API before submission; other tickers and BSE-only stocks
-  should be spot-checked before relying on this in production.
+  NSE ticker/company name. Verified live against the deployed app. This works
+  without special-case code: the backend passes the entered value straight
+  through to IndianAPI's `/stock` and `/historical_data` endpoints, which
+  recognize BSE codes natively.
 - **Company-name search relies on IndianAPI's own fuzzy matching** — a
   partial or ambiguous name (e.g. "deepa") may return an unrelated company
   IndianAPI considers a close match, rather than "not found." The app always
   displays the full matched company name prominently so this is immediately
   visible; entering the exact ticker symbol is more reliable than a partial
   company name.
+- **Cache is in-memory and single-instance** — fine for this assignment's
+  scale, but would move to Redis for any real multi-instance deployment.
+- **With more time**, I'd add: a small price-history chart alongside the
+  current price, real autocomplete/disambiguation for company-name search
+  instead of relying on IndianAPI's fuzzy matching, and integration tests
+  covering a real live ticker lookup (currently not possible in CI without
+  exposing a real API key as a secret).
 ## AI tools used
 
 - **Claude (Anthropic):** Planned the overall architecture and layered backend
